@@ -4,12 +4,11 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 /**
- * Versão inicial do filtro de bandeira. Licenciado sob GPL:
- * http://www.gnu.org/licenses/gpl.html
+ * Flag Filter
  * 
  * @author Thiago Galbiatti Vespa - <a
  *         href="mailto:thiago@thiagovespa.com.br">thiago@thiagovespa.com.br</a>
- * @version 0.6
+ * @version 0.7
  * 
  */
 public class FlagFilter implements ImageFilter {
@@ -18,7 +17,8 @@ public class FlagFilter implements ImageFilter {
 	private boolean y;
 
 	/**
-	 * Construtor padrão. O efeito é aplicado no eixo x e y
+	 * Default constructor.
+	 * The filter is applied under x and y axis
 	 */
 	public FlagFilter() {
 		this.x = true;
@@ -26,30 +26,33 @@ public class FlagFilter implements ImageFilter {
 	}
 
 	/**
-	 * Construtor que especifica onde aplicar o filtro
+	 * Constructor that defines what axis to aply the filter
 	 * 
 	 * @param x
-	 *            se verdadeiro aplica no eixo x
+	 *            x (horizontal) axis
 	 * @param y
-	 *            se verdadeiro aplica no eixo y
+	 *            y (vertical) axis
 	 */
 	public FlagFilter(boolean x, boolean y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.gvlabs.image.utils.filter.ImageFilter#applyTo(java.awt.image.BufferedImage)
+	 */
 	@Override
 	public BufferedImage applyTo(BufferedImage src) {
 
 		int w = src.getWidth();
 		int h = src.getHeight();
 
-		// TODO: Remover uso de matrizes desnecessárias
+		// TODO: Remove unnecessary matrix
 		int[][] resultMatrix = new int[w][h];
 
-		// TODO: Otimizar. Talvez utilizar PixelGrabber
+		// TODO: Optimize: Maybe PixelGrabber
 		
-		// Copia para matriz
+		// copy px to matrix
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
 				int value = src.getRGB(i, j);
@@ -61,9 +64,9 @@ public class FlagFilter implements ImageFilter {
 
 		if (this.y) {
 
-			// Cosseno horizontal
+			// cosine - horizontal
 			for (int i = 0; i < w; i++) {
-				// TODO: Colocar variáveis como parâmetro
+				// TODO: parameters
 				double x = (i / (double) (w - 1)) * 3 * Math.PI;
 				double valor = 0.27 * (((Math.cos(x) + 1) * ((double) (h - 1) / 2.0)));
 				transformY[i] = (int) valor;
@@ -84,9 +87,9 @@ public class FlagFilter implements ImageFilter {
 		}
 		if (this.x) {
 
-			// Cosseno vertical
+			// cosine - vertical
 			for (int i = 0; i < h + increment.getDelta(); i++) {
-				// TODO: Colocar variáveis como parâmetro
+				// TODO: parameters
 				double y = (i / (double) (h - 1)) * 1.5 * Math.PI + 16;
 				double valor = (((2 * Math.cos(y) + 1) * ((double) (w - 1) / 2.0)) * 0.07) + 7;
 				transformX[i] = (int) valor;
@@ -112,7 +115,6 @@ public class FlagFilter implements ImageFilter {
 		int[] resultImage = new int[(w + incrementX.getDelta())
 				* (h + increment.getDelta())];
 
-		// Matrix de conversão
 		for (int i = 0; i < transform2Matrix.length; i++) {
 			for (int j = 0; j < transform2Matrix[0].length; j++) {
 				resultImage[j * (transform2Matrix.length) + i] = transform2Matrix[i][j];
@@ -140,7 +142,6 @@ public class FlagFilter implements ImageFilter {
 		}
 	}
 
-	// TODO: Colocar esse método em classe utilitária
 	private MinMaxReturn getNormValue(int[] numbers) {
 		MinMaxReturn ret = new MinMaxReturn();
 		ret.max = numbers[0];
