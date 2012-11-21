@@ -47,6 +47,8 @@ public class FlagFilter implements ImageFilter {
 		// TODO: Remover uso de matrizes desnecessárias
 		int[][] resultMatrix = new int[w][h];
 
+		// TODO: Otimizar. Talvez utilizar PixelGrabber
+		
 		// Copia para matriz
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {

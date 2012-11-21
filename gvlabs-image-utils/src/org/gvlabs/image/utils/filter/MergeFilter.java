@@ -17,18 +17,16 @@ import java.awt.image.PixelGrabber;
 public class MergeFilter implements ImageFilter {
 	protected double weigth;
 	protected Image original;
-	protected ColorModel cm;
 
 	protected int resultArray[];
 
 	/**
-	 * Construtor
+	 * Construtor. Default weigth is 0.5
 	 * 
 	 * @param original
 	 *            original image
 	 */
 	public MergeFilter(Image original) {
-		cm = null;
 		this.original = original;
 		weigth = 0.5;
 		resultArray = null;
@@ -53,72 +51,78 @@ public class MergeFilter implements ImageFilter {
 	 */
 	public Image merge(Image toMerge) {
 
-		int wid1 = original.getWidth(null);
-		int wid2 = toMerge.getWidth(null);
-		int hgt1 = original.getHeight(null);
-		int hgt2 = toMerge.getHeight(null);
+		int widOriginal = original.getWidth(null);
+		int widToMerge = toMerge.getWidth(null);
+		int hgtOriginal = original.getHeight(null);
+		int hgtToMerge = toMerge.getHeight(null);
 
-		int resultWid = Math.max(wid1, wid2);
-		int resultHgt = Math.max(hgt1, hgt2);
-
-		cm = ColorModel.getRGBdefault();
+		int resultWid = Math.max(widOriginal, widToMerge);
+		int resultHgt = Math.max(hgtOriginal, hgtToMerge);
 
 		resultArray = new int[resultWid * resultHgt];
 
-		int[] p1 = new int[resultWid * resultHgt];
-		int[] p2 = new int[resultWid * resultHgt];
+		int[] pxOriginal = new int[resultWid * resultHgt];
+		int[] pxToMerge = new int[resultWid * resultHgt];
 
-		PixelGrabber pg1 = new PixelGrabber(original, 0, 0, wid1, hgt1, p1, 0,
+		PixelGrabber pgOriginal = new PixelGrabber(original, 0, 0, widOriginal, hgtOriginal, pxOriginal, 0,
 				resultWid);
 		try {
-			pg1.grabPixels();
-		} catch (Exception ie1) {
+			pgOriginal.grabPixels();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 
-		PixelGrabber pg2 = new PixelGrabber(toMerge, 0, 0, wid2, hgt2, p2, 0,
+		PixelGrabber pgToMerge = new PixelGrabber(toMerge, 0, 0, widToMerge, hgtToMerge, pxToMerge, 0,
 				resultWid);
+
 		try {
-			pg2.grabPixels();
-		} catch (Exception ie2) {
+			pgToMerge.grabPixels();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 
-		int y, x, rp, rpi;
-		int red1, red2, redr;
-		int green1, green2, greenr;
-		int blue1, blue2, bluer;
-		int alpha1, alpha2, alphar;
-		double wgt1, wgt2;
+		int y, x, resultPx, rpi;
+		int redOriginal, redToMerge, redResult;
+		int greenOriginal, greenToMerge, greenResult;
+		int blueOriginal, blueToMerge, blueResult;
+		int alphaOriginal, alphaToMerge, alphaResult;
+		double wgtOriginal, wgtToMerge;
 
 		// Merge
 		for (y = 0; y < resultHgt; y++) {
 			for (x = 0; x < resultWid; x++) {
 				rpi = y * resultWid + x;
-				rp = 0;
-				blue1 = p1[rpi] & 0x00ff;
-				blue2 = p2[rpi] & 0x00ff;
-				green1 = (p1[rpi] >> 8) & 0x00ff;
-				green2 = (p2[rpi] >> 8) & 0x00ff;
-				red1 = (p1[rpi] >> 16) & 0x00ff;
-				red2 = (p2[rpi] >> 16) & 0x00ff;
-				alpha1 = (p1[rpi] >> 24) & 0x00ff;
-				alpha2 = (p2[rpi] >> 24) & 0x00ff;
+				resultPx = 0;
+				
+				// Get pixel Color
+				blueOriginal = pxOriginal[rpi] & 0x00ff;
+				blueToMerge = pxToMerge[rpi] & 0x00ff;
+				greenOriginal = (pxOriginal[rpi] >> 8) & 0x00ff;
+				greenToMerge = (pxToMerge[rpi] >> 8) & 0x00ff;
+				redOriginal = (pxOriginal[rpi] >> 16) & 0x00ff;
+				redToMerge = (pxToMerge[rpi] >> 16) & 0x00ff;
+				alphaOriginal = (pxOriginal[rpi] >> 24) & 0x00ff;
+				alphaToMerge = (pxToMerge[rpi] >> 24) & 0x00ff;
 
-				wgt1 = weigth * (alpha1 / 255.0);
-				wgt2 = (1.0 - weigth) * (alpha2 / 255.0);
+				// Calculates weigth
+				wgtOriginal = weigth * (alphaOriginal / 255.0);
+				wgtToMerge = (1.0 - weigth) * (alphaToMerge / 255.0);
 
-				redr = (int) (red1 * wgt1 + red2 * wgt2);
-				redr = (redr < 0) ? (0) : ((redr > 255) ? (255) : (redr));
-				greenr = (int) (green1 * wgt1 + green2 * wgt2);
-				greenr = (greenr < 0) ? (0) : ((greenr > 255) ? (255)
-						: (greenr));
-				bluer = (int) (blue1 * wgt1 + blue2 * wgt2);
-				bluer = (bluer < 0) ? (0) : ((bluer > 255) ? (255) : (bluer));
-				alphar = 255;
+				// Apply weigth
+				redResult = (int) (redOriginal * wgtOriginal + redToMerge * wgtToMerge);
+				redResult = (redResult < 0) ? (0) : ((redResult > 255) ? (255) : (redResult));
+				greenResult = (int) (greenOriginal * wgtOriginal + greenToMerge * wgtToMerge);
+				greenResult = (greenResult < 0) ? (0) : ((greenResult > 255) ? (255)
+						: (greenResult));
+				blueResult = (int) (blueOriginal * wgtOriginal + blueToMerge * wgtToMerge);
+				blueResult = (blueResult < 0) ? (0) : ((blueResult > 255) ? (255) : (blueResult));
+				alphaResult = 255;
 
-				rp = (((((alphar << 8) + (redr & 0x0ff)) << 8) + (greenr & 0x0ff)) << 8)
-						+ (bluer & 0x0ff);
+				// Result pixel
+				resultPx = (((((alphaResult << 8) + (redResult & 0x0ff)) << 8) + (greenResult & 0x0ff)) << 8)
+						+ (blueResult & 0x0ff);
 
-				resultArray[rpi] = rp;
+				resultArray[rpi] = resultPx;
 			}
 		}
 
@@ -128,7 +132,7 @@ public class MergeFilter implements ImageFilter {
 		if (resultArray == null) {
 			return null;
 		}
-		mis = new MemoryImageSource(resultWid, resultHgt, cm, resultArray, 0,
+		mis = new MemoryImageSource(resultWid, resultHgt, ColorModel.getRGBdefault(), resultArray, 0,
 				resultWid);
 		ret = Toolkit.getDefaultToolkit().createImage(mis);
 		resultArray = null;
@@ -139,6 +143,9 @@ public class MergeFilter implements ImageFilter {
 	@Override
 	public BufferedImage applyTo(BufferedImage src) {
 		Image merged = this.merge(src);
+		
+		// Create a Buffered Image from a generic image
+		// TODO: Optimize
 		BufferedImage bImage = new BufferedImage(merged.getWidth(null),
 				merged.getHeight(null), BufferedImage.TYPE_INT_RGB);
 
