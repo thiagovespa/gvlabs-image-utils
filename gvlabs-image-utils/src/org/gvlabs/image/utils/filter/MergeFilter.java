@@ -129,9 +129,6 @@ public class MergeFilter implements ImageFilter {
 		// TODO: Optimize
 		Image ret;
 		MemoryImageSource mis;
-		if (resultArray == null) {
-			return null;
-		}
 		mis = new MemoryImageSource(resultWid, resultHgt, ColorModel.getRGBdefault(), resultArray, 0,
 				resultWid);
 		ret = Toolkit.getDefaultToolkit().createImage(mis);
