@@ -16,5 +16,5 @@ public interface ImageFilter {
 	 * @param src original image
 	 * @return transformed image
 	 */
-	public BufferedImage applyTo(BufferedImage src);
+	BufferedImage applyTo(BufferedImage src);
 }
