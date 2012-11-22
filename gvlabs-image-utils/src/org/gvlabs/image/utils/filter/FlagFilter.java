@@ -13,16 +13,16 @@ import java.util.Arrays;
  */
 public class FlagFilter implements ImageFilter {
 
-	private boolean x;
-	private boolean y;
+	private boolean xAxis;
+	private boolean yAxis;
 
 	/**
 	 * Default constructor.
 	 * The filter is applied under x and y axis
 	 */
 	public FlagFilter() {
-		this.x = true;
-		this.y = true;
+		this.xAxis = true;
+		this.yAxis = true;
 	}
 
 	/**
@@ -34,8 +34,8 @@ public class FlagFilter implements ImageFilter {
 	 *            y (vertical) axis
 	 */
 	public FlagFilter(boolean x, boolean y) {
-		this.x = x;
-		this.y = y;
+		this.xAxis = x;
+		this.yAxis = y;
 	}
 
 	/* (non-Javadoc)
@@ -62,7 +62,7 @@ public class FlagFilter implements ImageFilter {
 
 		int[] transformY = new int[w];
 
-		if (this.y) {
+		if (this.yAxis) {
 
 			// cosine - horizontal
 			for (int i = 0; i < w; i++) {
@@ -85,7 +85,7 @@ public class FlagFilter implements ImageFilter {
 				transformMatrix[i][increment.getSum() + desloc] = resultMatrix[i][j];
 			}
 		}
-		if (this.x) {
+		if (this.xAxis) {
 
 			// cosine - vertical
 			for (int i = 0; i < h + increment.getDelta(); i++) {
