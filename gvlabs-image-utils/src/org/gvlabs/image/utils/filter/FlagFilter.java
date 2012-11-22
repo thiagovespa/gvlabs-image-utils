@@ -129,7 +129,7 @@ public class FlagFilter implements ImageFilter {
 		return dest;
 	}
 
-	private class MinMaxReturn {
+	private static class MinMaxReturn {
 		private int min;
 		private int max;
 
