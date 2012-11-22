@@ -38,5 +38,5 @@ public class MergeFilterTest {
 		ImageIO.write(bImage, "jpg", fileResult);
 		assertTrue(fileResult.exists());
 	}
-
+	
 }

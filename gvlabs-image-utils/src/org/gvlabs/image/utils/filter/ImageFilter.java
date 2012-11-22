@@ -3,18 +3,18 @@ package org.gvlabs.image.utils.filter;
 import java.awt.image.BufferedImage;
 
 /**
- * Interface à ser utilizada em todos os filtros de imagem
+ * Common interface to filters
  * 
  * @author Thiago Galbiatti Vespa - <a
  *         href="mailto:thiago@thiagovespa.com.br">thiago@thiagovespa.com.br</a>
- * @version 1.0
+ * @version 1.1
  *
  */
 public interface ImageFilter {
 	/**
-	 * Aplica o filtro à imagem
-	 * @param src Imagem original
-	 * @return Imagem com o filtro aplicado
+	 * Apply image filter
+	 * @param src original image
+	 * @return transformed image
 	 */
 	public BufferedImage applyTo(BufferedImage src);
 }
