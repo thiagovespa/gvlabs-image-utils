@@ -15,10 +15,10 @@ import java.awt.image.PixelGrabber;
  * @version 3.0
  */
 public class MergeFilter implements ImageFilter {
-	protected double weigth;
-	protected Image original;
+	private double weigth;
+	private Image original;
 
-	protected int resultArray[];
+	private int resultArray[];
 
 	/**
 	 * Construtor. Default weigth is 0.5

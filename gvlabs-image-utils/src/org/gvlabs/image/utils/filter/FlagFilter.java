@@ -129,9 +129,9 @@ public class FlagFilter implements ImageFilter {
 		return dest;
 	}
 
-	class MinMaxReturn {
-		int min;
-		int max;
+	private class MinMaxReturn {
+		private int min;
+		private int max;
 
 		int getDelta() {
 			return max - min;
