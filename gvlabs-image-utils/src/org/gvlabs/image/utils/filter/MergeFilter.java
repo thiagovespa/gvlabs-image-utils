@@ -69,7 +69,6 @@ public class MergeFilter implements ImageFilter {
 		try {
 			pgOriginal.grabPixels();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 
 		PixelGrabber pgToMerge = new PixelGrabber(toMerge, 0, 0, widToMerge, hgtToMerge, pxToMerge, 0,
@@ -78,7 +77,6 @@ public class MergeFilter implements ImageFilter {
 		try {
 			pgToMerge.grabPixels();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 
 		int y, x, resultPx, rpi;
